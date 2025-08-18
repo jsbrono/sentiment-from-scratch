@@ -88,22 +88,21 @@ class NeuralNetwork:
         self.loss_derivative = loss_derivative
 
     def train(
-        self, epochs: int, training_data: npt.NDArray, training_labels: npt.NDArray
+        self, training_data: npt.NDArray, training_labels: npt.NDArray
     ):
-        for _ in range(epochs):
-            # forward pass
-            features = training_data
-            for layer in self.layers:
-                features = layer.forward_pass(
-                    features
-                )  # input features become outputs (predictions)
+        # forward pass
+        features = training_data
+        for layer in self.layers:
+            features = layer.forward_pass(
+                features
+            )  # input features become outputs (predictions)
 
-            # gradient of loss w.r.t output
-            dA = self.loss_derivative(features, training_labels)
+        # gradient of loss w.r.t output
+        dA = self.loss_derivative(features, training_labels)
 
-            # backpropagating each layer
-            for layer in reversed(self.layers):
-                dA = layer.backpropagate(dA, self.learning_rate)
+        # backpropagating each layer
+        for layer in reversed(self.layers):
+            dA = layer.backpropagate(dA, self.learning_rate)
 
     def predict(self, data: npt.NDArray) -> npt.NDArray:
         for layer in self.layers:
@@ -122,7 +121,9 @@ test_data = testing_spam[:, 1:]
 layers = [Layer(54, 4, relu, relu_derivative), Layer(4, 1, sigmoid, sigmoid_derivative)]
 network = NeuralNetwork(layers, loss_derivative=BCE_loss_derivative, learning_rate=0.1)
 
-network.train(1000, train_data, train_labels)
+epochs = 1000
+for _ in range(epochs):
+    network.train(train_data, train_labels)
 
 predictions = network.predict(test_data).squeeze() > 0.5
 accuracy = np.sum(predictions == test_labels) * 100 / test_labels.shape[0]
