@@ -46,6 +46,7 @@ class Layer:
         self.activation_function = activation_function
         self.activation_derivative = activation_derivative
 
+        # populated in forward pass
         self.input_data = None
         self.forward = None
         self.activated = None
@@ -64,7 +65,9 @@ class Layer:
             self.activation_derivative(self.forward) * da
         )  # gradient w.r.t pre-activation
         dW = np.matmul(self.input_data.T, dZ) / batch_size  # gradient w.r.t weights
-        dB = np.matmul(np.ones((batch_size, 1)).T, dZ) / batch_size  # gradient w.r.t bias
+        dB = (
+            np.matmul(np.ones((batch_size, 1)).T, dZ) / batch_size
+        )  # gradient w.r.t bias
 
         # gradient update (basic for now)
         self.weights = self.weights - learning_rate * dW
@@ -75,7 +78,7 @@ class Layer:
         return next_da
 
 
-# multi-layer ann
+# multi-layer ANN
 class NeuralNetwork:
     def __init__(
         self,
@@ -87,27 +90,24 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
         self.loss_derivative = loss_derivative
 
-    def train(
-        self, training_data: npt.NDArray, training_labels: npt.NDArray
-    ):
-        # forward pass
-        features = training_data
+    def train(self, training_data: npt.NDArray, training_labels: npt.NDArray):
+        # forward pass, note that input features become the predictions after the pass
+        predictions = training_data
         for layer in self.layers:
-            features = layer.forward_pass(
-                features
-            )  # input features become outputs (predictions)
+            predictions = layer.forward_pass(predictions)
 
         # gradient of loss w.r.t output
-        dA = self.loss_derivative(features, training_labels)
+        dA = self.loss_derivative(predictions, training_labels)
 
         # backpropagating each layer
         for layer in reversed(self.layers):
             dA = layer.backpropagate(dA, self.learning_rate)
 
     def predict(self, data: npt.NDArray) -> npt.NDArray:
+        predictions = data
         for layer in self.layers:
-            data = layer.forward_pass(data)
-        return data
+            predictions = layer.forward_pass(predictions)
+        return predictions
 
 
 training_spam = np.loadtxt(open("data/training_spam.csv"), delimiter=",")
@@ -127,4 +127,4 @@ for _ in range(epochs):
 
 predictions = network.predict(test_data).squeeze() > 0.5
 accuracy = np.sum(predictions == test_labels) * 100 / test_labels.shape[0]
-print("\nAccuracy on test data is {:.1f}%.".format(accuracy))
+print("Accuracy on test data is {:.1f}%.".format(accuracy))
