@@ -49,7 +49,7 @@ train_model(
     train_labels,
     val_data,
     val_labels,
-    epochs=1000,
+    epochs=100,
     batch_size=256,
     verbose=True,
 )
@@ -57,6 +57,3 @@ train_model(
 predictions = network.predict(val_data).squeeze() > 0.5
 accuracy = np.mean(predictions == val_labels) * 100
 print("Accuracy on test data is {:.1f}%.".format(accuracy))
-
-# could add more gradient update methods
-# move hyperparams to config entirely
