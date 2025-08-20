@@ -59,3 +59,4 @@ accuracy = np.mean(predictions == val_labels) * 100
 print("Accuracy on test data is {:.1f}%.".format(accuracy))
 
 # could add more gradient update methods
+# move hyperparams to config entirely

@@ -27,7 +27,7 @@ def get_imdb_review_data():
     df = pd.read_csv(csv_path)
     df["sentiment"] = df["sentiment"].map({"positive": 1, "negative": 0})
 
-    reviews = df["review"].to_numpy()[:10000]
-    labels = df["sentiment"].to_numpy()[:10000]
+    reviews = df["review"].to_numpy()
+    labels = df["sentiment"].to_numpy()
 
     return reviews,labels
