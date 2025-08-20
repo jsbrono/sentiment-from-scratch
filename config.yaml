@@ -1,0 +1,16 @@
+preprocessing:
+  tokeniser: split
+  normalisation: L2
+  keep_percent: 0.1
+  test_size: 0.15
+  val_size: 0.15
+  include_ngrams: True
+  ngram_n: 2
+  keep_ngrams: 1000
+model:
+  layers: [50, 1]
+hyperparameters:
+  learning_rate: 0.01
+  epochs: 100
+  batch_size: 256
+

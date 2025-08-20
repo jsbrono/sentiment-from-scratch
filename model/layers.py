@@ -11,7 +11,7 @@ class Layer:
         activation_function: Callable[[npt.NDArray], npt.NDArray],
         activation_derivative: Callable[[npt.NDArray], npt.NDArray],
     ):
-        self.weights = np.random.rand(input_size, num_neurons)
+        self.weights = np.random.randn(input_size, num_neurons) * np.sqrt(2/input_size) # he initialisation, assume relu everywhere for now
         self.biases = np.zeros((1, num_neurons))
         self.activation_function = activation_function
         self.activation_derivative = activation_derivative

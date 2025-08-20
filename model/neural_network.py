@@ -1,6 +1,7 @@
 from typing import Callable, List
 import numpy.typing as npt
 from model.layers import Layer
+import numpy as np
 
 # multi-layer ANN
 class NeuralNetwork:
@@ -15,6 +16,8 @@ class NeuralNetwork:
         self.loss_derivative = loss_derivative
 
     def train(self, training_data: npt.NDArray, training_labels: npt.NDArray):
+        if training_labels.ndim == 1:
+            training_labels = training_labels[:, np.newaxis]
         # forward pass, note that input features become the predictions after the pass
         predictions = training_data
         for layer in self.layers:
